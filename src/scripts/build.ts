@@ -6,16 +6,15 @@ import * as webpack from 'webpack';
 import { webpackconfig } from '../utils/webpackconfig';
 import * as rimraf from 'rimraf';
 import { awaitAllImports } from '../utils/loadableComponent';
+import { renderStylesToString } from 'emotion-server';
 
-const renderHtml = async () => {
+const renderHtml = async (): Promise<string> => {
     await awaitAllImports();
-    console.log(
-        ReactDomServer.renderToString(
-            React.createElement(
-                Index,
-                {},
-                React.createElement(IndexPage, { route: 'about' })
-            )
+    return ReactDomServer.renderToString(
+        React.createElement(
+            Index,
+            {},
+            React.createElement(IndexPage, { route: 'about' })
         )
     );
 };
@@ -45,5 +44,11 @@ const compile = () => {
     });
 };
 
-renderHtml();
-compile();
+const main = async () => {
+    compile();
+    const html = await renderHtml();
+    const htmlWithInlinedCss = renderStylesToString(html);
+    console.log(htmlWithInlinedCss);
+};
+
+main();
