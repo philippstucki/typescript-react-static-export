@@ -2,19 +2,6 @@ import * as webpack from 'webpack';
 import * as path from 'path';
 import * as webpackMerge from 'webpack-merge';
 
-const babelOptions = {
-    presets: [
-        'react',
-        [
-            'es2015',
-            {
-                modules: false
-            }
-        ],
-        'es2016'
-    ]
-};
-
 export namespace webpackconfig {
     const rootDir = () => path.resolve(__dirname, '../..');
     export const getOutputDirectory = () => path.resolve(rootDir(), './dist');
@@ -22,10 +9,10 @@ export namespace webpackconfig {
         webpackMerge(commonConfig(), {
             mode: 'production',
             context: path.resolve(rootDir(), './page'),
-            entry: { main: './main.ts' },
+            entry: { main: './main.ts', Index: './Index.tsx' },
             output: {
-                filename: '[name].[chunkhash].bundle.js',
-                chunkFilename: '[name].chunk.js'
+                filename: 'bundle-[hash].js',
+                chunkFilename: '[name].bundle-[hash].js'
             }
         });
 
@@ -36,14 +23,10 @@ export namespace webpackconfig {
                     test: /\.tsx?$/,
                     exclude: /node_modules/,
                     use: [
-                        { loader: 'babel-loader', options: babelOptions },
-                        { loader: 'ts-loader' }
+                        {
+                            loader: 'ts-loader'
+                        }
                     ]
-                },
-                {
-                    test: /\.js$/,
-                    exclude: /node_modules/,
-                    use: [{ loader: 'babel-loader', options: babelOptions }]
                 }
             ]
         },
@@ -58,9 +41,9 @@ export namespace webpackconfig {
         optimization: {
             splitChunks: {
                 chunks: 'all',
-                minSize: 1000,
                 name: true
             }
-        }
+        },
+        stats: 'minimal'
     });
 }

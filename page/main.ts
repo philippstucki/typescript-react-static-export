@@ -1,11 +1,10 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-// import { Index } from './Index';
+import { Index } from './Index';
 
-const renderMain = async () => {
-    const Index = await import('./Index');
+const renderMain = () => {
     ReactDOM.render(
-        React.createElement(Index.Index, {}),
+        React.createElement(Index),
         document.getElementById('main')
     );
 };

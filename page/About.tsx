@@ -1,3 +1,8 @@
 import * as React from 'react';
 
-export const About = () => <div className="About">Hello About</div>;
+interface AboutProps {
+    n: number;
+}
+export const About = (p: AboutProps) => (
+    <div className="About">Hello About {p.n}</div>
+);

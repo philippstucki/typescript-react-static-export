@@ -5,25 +5,31 @@ import { Index } from '../templates/Index';
 import * as webpack from 'webpack';
 import { webpackconfig } from '../utils/webpackconfig';
 import * as rimraf from 'rimraf';
+import { awaitAllImports } from '../utils/loadableComponent';
 
-const renderComponentToString = (C: React.ReactElement<any>) =>
-    ReactDomServer.renderToString(C);
-
-const renderHtml = () =>
-    renderComponentToString(
-        React.createElement(Index, {}, React.createElement(IndexPage))
+const renderHtml = async () => {
+    await awaitAllImports();
+    console.log(
+        ReactDomServer.renderToString(
+            React.createElement(
+                Index,
+                {},
+                React.createElement(IndexPage, { route: 'about' })
+            )
+        )
     );
+};
 
 const compile = () => {
     rimraf(webpackconfig.getOutputDirectory(), () => {});
-
-    const compiler = webpack(webpackconfig.get());
+    const config = webpackconfig.get();
+    const compiler = webpack(config);
 
     compiler.run((err, stats) => {
         if (err) {
             console.log(err);
         }
-        const info = stats.toJson();
+        const info = stats.toJson({});
         if (stats.hasErrors()) {
             console.log(info.errors);
         }
@@ -39,5 +45,5 @@ const compile = () => {
     });
 };
 
-console.log(renderHtml());
+renderHtml();
 compile();
