@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Route } from './Routes';
-import { getLoadableComponent } from '../src/utils/loadableComponent';
+import { getLoadableComponent } from 'typescript-react-webpack-dynamic-import';
 
 interface IndexProps {
     route: Route;
