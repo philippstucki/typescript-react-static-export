@@ -1,1 +1,1 @@
-export type Route = 'about' | 'contact';
+export type Route = 'home' | 'about' | 'contact';

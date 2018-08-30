@@ -18,11 +18,10 @@
         "ts-loader": "^4.4.2",
         "ts-node": "^7.0.0",
         "typescript": "^2.9.2",
-        "typescript-react-webpack-dynamic-import": "https://github.com/philippstucki/typescript-react-webpack-dynamic-import.git",
         "webpack": "^4.16.1",
         "webpack-merge": "^4.1.3"
     },
     "scripts": {
-        "buildStatic": "ts-node -P tsconfig-node.json src/scripts/build.ts"
+        "buildStatic": "ts-node -P tsconfig-node.json --no-cache scripts/build.ts"
     }
 }

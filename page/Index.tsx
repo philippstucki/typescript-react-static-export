@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Route } from './Routes';
-import { getLoadableComponent } from 'typescript-react-webpack-dynamic-import';
+import { getLoadableComponent } from '../src/utils/loadableComponent';
+import { Home } from './Home';
 
 interface IndexProps {
     route: Route;
@@ -18,7 +19,9 @@ const LoadableContact = getLoadableComponent(
 export const Index = (p: IndexProps) => {
     if (p.route === 'about') {
         return <LoadableAbout n={123} />;
-    } else {
+    } else if (p.route === 'contact') {
         return <LoadableContact />;
+    } else {
+        return <Home />;
     }
 };
