@@ -4,12 +4,14 @@ import * as webpackMerge from 'webpack-merge';
 
 export namespace webpackconfig {
     const rootDir = () => path.resolve(__dirname, '../..');
+
     export const getOutputDirectory = () => path.resolve(rootDir(), './dist');
-    export const get = (): webpack.Configuration =>
+
+    export const get = (entry: webpack.Entry): webpack.Configuration =>
         webpackMerge(commonConfig(), {
             mode: 'production',
             context: path.resolve(rootDir(), './page'),
-            entry: { main: './main.ts', Index: './Index.tsx' },
+            entry: entry /* { main: './main.ts', Index: './Index.tsx' }, */,
             output: {
                 filename: 'bundle-[hash].js',
                 chunkFilename: '[name].bundle-[hash].js'
