@@ -8,6 +8,7 @@ import { page } from '../src/page';
 import { assets } from '../src/assets';
 import { config } from '../src/config';
 import { html } from '../src/html';
+import { templates } from './templates';
 
 const main = async () => {
     const rootDir = path.resolve(__dirname, '..');
@@ -39,17 +40,25 @@ const main = async () => {
         entry: entry
     };
 
-    // clean output directory
-    rimraf(config.outputDirectory, () => {});
-
-    assets.compile(config);
-
     // wait for all dynamic imports to finish
     await awaitAllImports();
 
+    // clean output directory
+    rimraf(config.outputDirectory, () => {});
+
+    // compile all chunks using webpack
+    assets.compile(config);
+
+    // (a) => () => templates.index({...a})
+
     for (const page of pages) {
-        const pageHtml = html.renderPage(page);
+        const pageHtml = templates.index({
+            title: 'Hello World',
+            scripts: '<script />',
+            html: html.renderPage(page)
+        });
         const pageHtmlCss = renderStylesToString(pageHtml);
+
         console.log(pageHtmlCss);
     }
 };

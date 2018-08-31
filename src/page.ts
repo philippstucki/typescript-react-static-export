@@ -8,10 +8,6 @@ export namespace page {
         render: () => React.ReactElement<any>;
     }
 
-    // export const define = (page: Page) => {
-    //     pages.push(page);
-    // };
-
     export const getEntry = (pages: Page[]) =>
         pages.map(p => p.entry).reduce((all, entry) => ({ ...all, ...entry }));
 }
