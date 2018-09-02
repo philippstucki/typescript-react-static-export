@@ -1,15 +1,10 @@
 import * as webpack from 'webpack';
-import * as path from 'path';
 import * as webpackMerge from 'webpack-merge';
 import { config } from './config';
 
 export namespace webpackconfig {
-    const rootDir = () => path.resolve(__dirname, '../..');
-
-    export const getOutputDirectory = () => path.resolve(rootDir(), './dist');
-
     export const get = (config: config.Config): webpack.Configuration =>
-        webpackMerge(commonConfig(), {
+        webpackMerge(commonConfig(config), {
             mode: 'production',
             context: config.context,
             entry: config.entry,
@@ -19,7 +14,7 @@ export namespace webpackconfig {
             }
         });
 
-    const commonConfig = (): webpack.Configuration => ({
+    const commonConfig = (config: config.Config): webpack.Configuration => ({
         module: {
             rules: [
                 {
@@ -39,7 +34,7 @@ export namespace webpackconfig {
         },
 
         output: {
-            path: getOutputDirectory()
+            path: config.outputDirectory
         },
         optimization: {
             splitChunks: {

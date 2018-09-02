@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as rimraf from 'rimraf';
 import * as path from 'path';
+import * as fs from 'fs';
 import { Index } from '../page/Index';
 import { awaitAllImports } from '../src/utils/loadableComponent';
 import { renderStylesToString } from 'emotion-server';
@@ -9,6 +10,7 @@ import { assets } from '../src/assets';
 import { config } from '../src/config';
 import { html } from '../src/html';
 import { templates } from './templates';
+import { arrayUtils } from '../src/utils/arrayUtils';
 
 const main = async () => {
     const rootDir = path.resolve(__dirname, '..');
@@ -20,7 +22,7 @@ const main = async () => {
     // defines all pages and their respective routes
     const pages: page.Page[] = [
         {
-            path: '/',
+            path: 'index.html',
             entry: IndexEntry,
             render: IndexRender
         }
@@ -28,7 +30,7 @@ const main = async () => {
 
     // define webpack entry points.
     // main.ts is added here as the main app entry point. The rest is derived from the pages array
-    const entry = {
+    const entrypoints = {
         ...page.getEntry(pages),
         main: './main.ts'
     };
@@ -37,7 +39,7 @@ const main = async () => {
         mode: 'production',
         outputDirectory: path.resolve(rootDir, './dist'),
         context: path.resolve(rootDir, './page'),
-        entry: entry
+        entry: entrypoints
     };
 
     // wait for all dynamic imports to finish
@@ -45,21 +47,29 @@ const main = async () => {
 
     // clean output directory
     rimraf(config.outputDirectory, () => {});
+    // fs.mkdirSync(config.outputDirectory);
 
     // compile all chunks using webpack
-    assets.compile(config);
-
-    // (a) => () => templates.index({...a})
+    const assetsByEntry = await assets.compile(config);
+    const assetFiles: string[] = [];
+    for (const entry in assetsByEntry) {
+        assetFiles.push(...assetsByEntry[entry]);
+    }
 
     for (const page of pages) {
         const pageHtml = templates.index({
             title: 'Hello World',
-            scripts: '<script />',
+            scripts: arrayUtils
+                .uniq(assetFiles)
+                .map(asset => `<script src="${asset}"></script>`)
+                .reduce((a, e) => a + e, ''),
             html: html.renderPage(page)
         });
         const pageHtmlCss = renderStylesToString(pageHtml);
-
-        console.log(pageHtmlCss);
+        fs.writeFileSync(
+            path.resolve(config.outputDirectory, page.path),
+            pageHtmlCss
+        );
     }
 };
 
