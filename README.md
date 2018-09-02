@@ -4,8 +4,9 @@ Provides a simple API to export existing React/TypeScript-Apps to static files u
 
 INCOMPLETE: currently work in progress...
 
-## makeStaticPage
+# Todo
 
--   props
--   targetDir ('/foo/bar/) should be the same as the route
--   entry point for this page
+-   figure out why bootstrap code in main.ts is not output by webpack
+-   only add assets to pages which are dependencies of the page entry point
+-   also add assets which need to be prefetched
+-   improve page / entrypoint definition (entry points should be string literals)
