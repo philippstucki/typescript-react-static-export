@@ -5,12 +5,11 @@ import { config } from './config';
 export namespace webpackconfig {
     export const get = (config: config.Config): webpack.Configuration =>
         webpackMerge(commonConfig(config), {
-            mode: 'production',
+            mode: config.mode,
             context: config.context,
             entry: config.entry,
             output: {
-                filename: 'bundle-[hash].js',
-                chunkFilename: '[name].bundle-[hash].js'
+                filename: 'bundle-[name]-[hash].js'
             }
         });
 
@@ -42,6 +41,6 @@ export namespace webpackconfig {
                 name: true
             }
         },
-        stats: 'minimal'
+        stats: 'normal'
     });
 }
