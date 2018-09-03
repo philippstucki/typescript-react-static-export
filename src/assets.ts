@@ -18,6 +18,7 @@ export namespace assets {
                 }
 
                 const info = stats.toJson({});
+                console.log(stats.toString());
 
                 if (stats.hasErrors()) {
                     console.log(info.errors);
