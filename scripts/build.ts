@@ -36,7 +36,7 @@ const main = async () => {
     };
 
     const config: config.Config = {
-        mode: 'production',
+        mode: 'development',
         outputDirectory: path.resolve(rootDir, './dist'),
         context: path.resolve(rootDir, './page'),
         entry: entrypoints
