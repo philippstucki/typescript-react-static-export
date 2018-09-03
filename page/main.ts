@@ -3,8 +3,8 @@ import * as ReactDOM from 'react-dom';
 import { Index } from './Index';
 
 const renderMain = () => {
-    ReactDOM.render(
-        React.createElement(Index),
+    ReactDOM.hydrate(
+        React.createElement(Index, { route: 'about' }),
         document.getElementById('main')
     );
 };

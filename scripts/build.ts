@@ -47,7 +47,6 @@ const main = async () => {
 
     // clean output directory
     rimraf(config.outputDirectory, () => {});
-    // fs.mkdirSync(config.outputDirectory);
 
     // compile all chunks using webpack
     const assetsByEntry = await assets.compile(config);
